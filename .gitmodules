@@ -1,3 +1,6 @@
 [submodule "themes/canoe"]
 	path = themes/canoe
 	url = https://github.com/stkevintan/canoe.git
+[submodule "themes/loveit"]
+	path = themes/loveit
+	url = https://github.com/dillonzq/LoveIt.git
