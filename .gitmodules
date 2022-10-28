@@ -1,0 +1,3 @@
+[submodule "themes/canoe"]
+	path = themes/canoe
+	url = https://github.com/stkevintan/canoe.git
