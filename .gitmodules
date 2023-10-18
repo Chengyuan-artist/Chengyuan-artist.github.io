@@ -4,3 +4,6 @@
 [submodule "themes/loveit"]
 	path = themes/loveit
 	url = https://github.com/Chengyuan-artist/LoveIt.git
+[submodule "themes/hugo-theme-stack"]
+	path = themes/hugo-theme-stack
+	url = https://github.com/CaiJimmy/hugo-theme-stack/
