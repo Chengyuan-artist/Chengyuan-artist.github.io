@@ -1,0 +1,19 @@
+<script>
+  (function () {
+    const customFont = document.createElement('link');
+    customFont.href = "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300&family=Noto+Serif+SC:wght@400&display=swap";
+
+    customFont.type = "text/css";
+    customFont.rel = "stylesheet";
+
+    document.head.appendChild(customFont);
+  }());
+</script>
+
+<style>
+  /* Overwrite CSS variable */
+  :root {
+    --zh-font-family: "Noto Serif SC", "PingFang SC", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei";
+    --article-font-family: Verdana, "Noto Serif SC", var(--base-font-family);
+  }
+</style>
