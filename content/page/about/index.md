@@ -1,13 +1,10 @@
 ---
-title: About
+title: 关于
 description:
 date: 2021-09-20T19:45:13+08:00
-aliases:
-  - about-us
-  - about-hugo
-  - contact
 license: CC BY-NC-ND
 lastmod: '2020-10-09'
+slug: "about"
 menu:
     main: 
         weight: -90

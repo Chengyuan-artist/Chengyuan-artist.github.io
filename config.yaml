@@ -187,11 +187,11 @@ menu:
           params:
               icon: brand-github
 
-        - identifier: twitter
-          name: Twitter
-          url: https://twitter.com
+        - identifier: rss
+          name: rss
+          url: /index.xml
           params:
-              icon: brand-twitter
+              icon: rss
 
 related:
     includeNewer: true
