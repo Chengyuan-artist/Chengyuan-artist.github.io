@@ -57,7 +57,7 @@ params:
 
     comments:
         enabled: true
-        provider: disqus
+        provider: twikoo
 
         disqusjs:
             shortname:
@@ -100,7 +100,7 @@ params:
                 placeholder:
 
         twikoo:
-            envId:
+            envId: https://scintillating-dragon-68e1aa.netlify.app/.netlify/functions/twikoo
             region:
             path:
             lang:
