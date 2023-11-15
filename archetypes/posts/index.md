@@ -17,6 +17,10 @@ hiddenFromSearch: false
 featuredImage: ""
 featuredImagePreview: ""
 
+toc:
+  enable: true
+math:
+  enable: true
 lightgallery: false
 license: ""
 ---
