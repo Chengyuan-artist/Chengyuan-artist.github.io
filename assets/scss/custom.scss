@@ -76,6 +76,23 @@
       border-radius: 10px;
     }
   }
+
+  /* 文章列表页面两栏 */
+  .article-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: none;
+    box-shadow: none;
+    gap: 2rem;
+
+    article {
+      background: var(--card-background);
+      border: none;
+      box-shadow: var(--shadow-l2);
+      margin-bottom: 4px;
+      border-radius: 10px;
+    }
+  }
 }
 
 

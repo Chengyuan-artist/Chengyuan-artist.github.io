@@ -1,7 +1,7 @@
 baseurl: https://chengyuan-artist.github.io
 languageCode: zh-cn
 theme: hugo-theme-stack
-paginate: 5
+paginate: 10
 title: 麦茶小站
 copyright: 麦茶
 
