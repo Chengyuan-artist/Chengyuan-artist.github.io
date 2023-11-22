@@ -43,19 +43,19 @@
 
 //-------------------------------------------------
 //文章封面高度更改
-.article-list article .article-image img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
+// .article-list article .article-image img {
+//   width: 100%;
+//   height: 150px;
+//   object-fit: cover;
 
-  @include respond(md) {
-    height: 200px;
-  }
+//   @include respond(md) {
+//     height: 200px;
+//   }
 
-  @include respond(xl) {
-    height: 305px;
-  }
-}
+//   @include respond(xl) {
+//     height: 305px;
+//   }
+// }
 
 //--------------------------------------------------
 //归档页面双栏
@@ -77,33 +77,21 @@
     }
   }
 
-  /* 文章列表页面两栏 */
-  .article-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: none;
-    box-shadow: none;
-    gap: 2rem;
+}
 
-    article {
-      background: var(--card-background);
-      border: none;
-      box-shadow: var(--shadow-l2);
-      margin-bottom: 4px;
-      border-radius: 10px;
-    }
-  }
+.article-list {
+  gap: 25px;
 }
 
 
 //-------------------------------------------------------
 //全局页面小图片样式微调
-.article-list--compact article .article-image img {
-  width: var(--image-size);
-  height: var(--image-size);
-  object-fit: cover;
-  border-radius: 17%;
-}
+// .article-list--compact article .article-image img {
+//   width: var(--image-size);
+//   height: var(--image-size);
+//   object-fit: cover;
+//   border-radius: 17%;
+// }
 
 //-------------------------------------------------------
 //选中样式美化
