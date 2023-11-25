@@ -209,12 +209,12 @@ license: ""
 
 ```
 Insert(x) {
-	Creat a B0 tree for x;
-	Change the pointer to the min root;
-	while (there are two Bk tree for some k) {
-		Link them into one Bk+1 tree;
-		Change the pointer to the min root;
-	}
+  Creat a B0 tree for x;
+  Change the pointer to the min root;
+    while (there are two Bk tree for some k) {
+      Link them into one Bk+1 tree;
+      Change the pointer to the min root;
+  }
 }
 ```
 
@@ -235,12 +235,12 @@ Insert(x) {
 
 ```
 ExtractMin(H) {
-	Remove the min node and insert its children to the root list;
-	Change the pointer to the min node;
-	while (there are two Bk tree for some k) {
-		Link them into one Bk+1 tree;
-		Change the pointer to the min root;
-	}
+  Remove the min node and insert its children to the root list;
+  Change the pointer to the min node;
+  while (there are two Bk tree for some k) {
+    Link them into one Bk+1 tree;
+    Change the pointer to the min root;
+  }
 }
 ```
 
@@ -309,12 +309,12 @@ $$
 
 ```
 ExtractMin() {
-	Remove the min node and insert its children to the root list;
-	Change the pointer to the min node;
-	while (there are two roots u and v of the same degree) {
-		Consolidate the two trees together;
-		Change the pointer to the min root;
-	}
+  Remove the min node and insert its children to the root list;
+  Change the pointer to the min node;
+  while (there are two roots u and v of the same degree) {
+	  Consolidate the two trees together;
+	  Change the pointer to the min root;
+  }
 }
 ```
 
@@ -347,23 +347,23 @@ ExtractMin() {
 
 ```
 DecreaseKey(x, k) {
-	key(x) = k;
-	if (heap order is violated) {
-		p = x->parent;
-		if (p is root node) {
-			Swap key between p and x;
-			return;
-		}
-		Cut the subtree rooted at x, and insert it into the root list;
-		Change the pointer to the min root node; 
-		while (p is marked) {
-			Cut the subtree rooted at p, and insert it into the root list;
-			Change the pointer to the min root node;
-			Unmark p;
-			p = p->parent;
-		}
-		Mark p;
-	}
+  key(x) = k;
+  if (heap order is violated) {
+    p = x->parent;
+    if (p is root node) {
+      Swap key between p and x;
+      return;
+    }
+    Cut the subtree rooted at x, and insert it into the root list;
+    Change the pointer to the min root node; 
+    while (p is marked) {
+      Cut the subtree rooted at p, and insert it into the root list;
+      Change the pointer to the min root node;
+      Unmark p;
+      p = p->parent;
+    }
+    Mark p;
+  }
 }
 ```
 
