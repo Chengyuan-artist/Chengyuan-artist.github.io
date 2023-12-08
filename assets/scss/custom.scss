@@ -99,3 +99,13 @@
   color: #fff;
   background: #557697;
 }
+
+// 暂时关闭归档页类别缩略图
+.section-card {
+  .section-image {
+    img {
+      width: 0;
+      height: 0;
+    }
+  }
+}
