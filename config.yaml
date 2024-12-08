@@ -1,9 +1,12 @@
 baseurl: https://chengyuan-artist.github.io
 languageCode: zh-cn
 theme: hugo-theme-stack
-paginate: 10
 title: 麦茶小站
 copyright: 麦茶
+pagination:
+  disableAliases: false
+  pagerSize: 10
+  path: page
 
 
 # Change it to your Disqus shortname before using
