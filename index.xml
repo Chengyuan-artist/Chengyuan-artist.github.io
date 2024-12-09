@@ -1,4 +1,103 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>麦茶小站</title><link>https://chengyuan-artist.github.io/</link><description>Recent content on 麦茶小站</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>麦茶</copyright><lastBuildDate>Sat, 25 Nov 2023 19:18:12 +0800</lastBuildDate><atom:link href="https://chengyuan-artist.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>《红猪》“因为他们的心，被大海和蓝天洗过”</title><link>https://chengyuan-artist.github.io/posts/movie_porco_rosso/</link><pubDate>Sat, 25 Nov 2023 19:18:12 +0800</pubDate><guid>https://chengyuan-artist.github.io/posts/movie_porco_rosso/</guid><description>&lt;img src="https://chengyuan-artist.github.io/posts/movie_porco_rosso/images/image-20231126000336734.png" alt="Featured image of post 《红猪》“因为他们的心，被大海和蓝天洗过” " />&lt;p>上周五看的电影，晚上写的影评，硬生生拖到现在才发（&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>麦茶小站</title><link>https://chengyuan-artist.github.io/</link><description>Recent content on 麦茶小站</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>麦茶</copyright><lastBuildDate>Mon, 09 Dec 2024 16:48:38 +0800</lastBuildDate><atom:link href="https://chengyuan-artist.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>SPDK应用静态链接</title><link>https://chengyuan-artist.github.io/posts/spdk_static_link/</link><pubDate>Mon, 09 Dec 2024 16:48:38 +0800</pubDate><guid>https://chengyuan-artist.github.io/posts/spdk_static_link/</guid><description>&lt;p>在编译SPDK应用程序时，有时需要使用静态链接SPDK库的版本。&lt;/p>
+&lt;p>有时甚至需要&lt;strong>完全&lt;/strong>静态链接（包括静态链接系统库，libc等）的版本。&lt;/p>
+&lt;blockquote>
+&lt;p>用于特定TEE环境，无动态库以及完整操作系统支持&lt;/p>
+&lt;/blockquote>
+&lt;p>去网上查询，没有直接SPDK静态链接的解决办法。探索了一番后，把我的做法总结上来。&lt;/p>
+&lt;p>&lt;strong>注意&lt;/strong>：本文的解决方案在于&lt;strong>完全静态链接&lt;/strong>SPDK程序（包括&lt;strong>libc&lt;/strong>）, 如果你寻找的是仅静态链接SPDK库的方法，请参考&lt;a class="link" href="https://spdk.io/doc/pkgconfig.html" target="_blank" rel="noopener"
+>Linking SPDK applications with pkg-config&lt;/a>。&lt;/p>
+&lt;h2 id="tldr">TL;DR&lt;/h2>
+&lt;p>以SPDK自带的&lt;code>spdk_nvme_perf&lt;/code>应用为例。&lt;/p>
+&lt;p>首先按照正常流程编译DPDK和SPDK。&lt;/p>
+&lt;blockquote>
+&lt;p>对于交叉编译（以RISC-V为例），先交叉&lt;a class="link" href="https://doc.dpdk.org/guides/linux_gsg/cross_build_dpdk_for_riscv.html" target="_blank" rel="noopener"
+>编译DPDK&lt;/a>并安装到路径&lt;code>/path/to/dpdk/bin&lt;/code>，随后如下编译SPDK:&lt;/p>
+&lt;p>进入SPDK根目录：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">CC&lt;/span>&lt;span class="o">=&lt;/span>riscv64-linux-gnu-gcc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">CXX&lt;/span>&lt;span class="o">=&lt;/span>riscv64-linux-gnu-g++
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">./configure --target-arch&lt;span class="o">=&lt;/span>rv64gc --cross-prefix&lt;span class="o">=&lt;/span>riscv64-linux-gnu --with-dpdk&lt;span class="o">=&lt;/span>/path/to/dpdk/bin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">make -j&lt;span class="o">(&lt;/span>&lt;span class="nv">$nproc&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/blockquote>
+&lt;p>进入&lt;code>SPDK_ROOT/app/spdk_nvme_perf&lt;/code>&lt;/p>
+&lt;p>编辑&lt;code>Makefile&lt;/code> 在尾部添加&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-makefile" data-lang="makefile">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">PKG_CONFIG_PATH&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">$(&lt;/span>SPDK_ROOT_DIR&lt;span class="k">)&lt;/span>/build/lib/pkgconfig
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">SPDK_LIB&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="k">$(&lt;/span>shell &lt;span class="nv">PKG_CONFIG_PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>PKG_CONFIG_PATH&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> pkg-config --libs spdk_nvme spdk_env_dpdk spdk_vmd&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">SYS_LIB&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="k">$(&lt;/span>shell &lt;span class="nv">PKG_CONFIG_PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>PKG_CONFIG_PATH&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> pkg-config --libs --static spdk_syslibs&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nf">static&lt;/span>&lt;span class="o">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">$(&lt;/span>CC&lt;span class="k">)&lt;/span> -o &lt;span class="k">$(&lt;/span>SPDK_ROOT_DIR&lt;span class="k">)&lt;/span>/build/bin/perf-static perf.o &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> -static -static-libgcc &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> -Wl,--whole-archive &lt;span class="k">$(&lt;/span>SPDK_LIB&lt;span class="k">)&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> -Wl,--no-whole-archive &lt;span class="k">$(&lt;/span>SYS_LIB&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">make static
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>即可获得位于&lt;code>$(SPDK_ROOT_DIR)/build/bin/perf-static&lt;/code>的静态链接可执行文件。&lt;/p>
+&lt;h2 id="解析">解析&lt;/h2>
+&lt;h3 id="pkg-config">&lt;code>pkg-config&lt;/code>&lt;/h3>
+&lt;p>&lt;code>pkg-config&lt;/code>是一个编译辅助工具，用于确定第三方库的位置以获取正确的链接位置和编译命令。需要配合环境变量&lt;code>PKG_CONFIG_PATH&lt;/code>使用以指向第三方库提供的&lt;code>*.pc&lt;/code>文件。&lt;/p>
+&lt;p>&lt;code>PKG_CONFIG_PATH = $(SPDK_ROOT_DIR)/build/lib/pkgconfig&lt;/code>即SPDK库的pakage config所在位置。&lt;/p>
+&lt;p>&lt;code>pkg-config --libs spdk_nvme spdk_env_dpdk spdk_vmd&lt;/code>命令给出了&lt;code>spdk_nvme&lt;/code>,&lt;code>spdk_env_dpdk&lt;/code>和&lt;code>spdk_vmd&lt;/code>三个库的链接命令，这些库的源文件位于&lt;code>$(SPDK_ROOT_DIR)/lib&lt;/code>。&lt;/p>
+&lt;blockquote>
+&lt;p>命令&lt;code>PKG_CONFIG_PATH = $(SPDK_ROOT_DIR)/build/lib/pkgconfig pkg-config --libs spdk_nvme&lt;/code>示例输出:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">-L/path/to/build/lib -lspdk_nvme -lspdk_sock -lspdk_sock_posix -lspdk_trace -lspdk_rpc -lspdk_jsonrpc -lspdk_json -lspdk_util -lspdk_vfio_user -lspdk_log
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/blockquote>
+&lt;p>&lt;code> pkg-config --libs --static spdk_syslibs&lt;/code>命令给出了SPDK库所需链接的系统库。&lt;/p>
+&lt;h3 id="编译选项">编译选项&lt;/h3>
+&lt;p>&lt;code>-static&lt;/code> 静态链接全局选项，所有库会进行静态链接。如果只想对部分库进行静态链接，可以使用&lt;code>-Wl,-Bstatic&lt;/code>和&lt;code>-Wl,-Bdynamic&lt;/code> 包裹要进行静态链接的库链接命令。&lt;/p>
+&lt;p>&lt;code>-static-libgcc&lt;/code> 静态链接libgcc&lt;/p>
+&lt;p>&lt;code>-Wl, --whole-archive&lt;/code> 给链接器传递的指令，强制将后面指定的静态库的&lt;strong>所有对象文件&lt;/strong>都包含到最终的可执行文件中（包括未被引用的符号）&lt;/p>
+&lt;p>&lt;code>-Wl,--no-whole-archive&lt;/code> 禁用 &lt;code>--whole-archive&lt;/code> 的行为&lt;/p>
+&lt;p>我尝试了许多不同命令组合，最终上文那种是最小的有效命令。&lt;/p>
+&lt;p>&lt;strong>碎碎念&lt;/strong>&lt;/p>
+&lt;p>本文是今年7月份帮师兄做实验的时候就打算写的一篇小trick, 拖到现在才写，坏处就是回顾了半天才想起来当时的做法。下次还是要更勤快些，现解决，现分享 :p&lt;/p>
+&lt;h2 id="参考">参考&lt;/h2>
+&lt;ol>
+&lt;li>&lt;a class="link" href="https://spdk.io/doc/pkgconfig.html" target="_blank" rel="noopener"
+>Linking SPDK applications with pkg-config&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://spdk.io/doc/libraries.html" target="_blank" rel="noopener"
+>SPDK Libraries: #SPDK Static Objects&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://gist.github.com/krsna1729/10900eaabeb648ddbf4642eb2c053624" target="_blank" rel="noopener"
+>compile statically linked dpdk apps&lt;/a>&lt;/li>
+&lt;/ol></description></item><item><title>《红猪》“因为他们的心，被大海和蓝天洗过”</title><link>https://chengyuan-artist.github.io/posts/movie_porco_rosso/</link><pubDate>Sat, 25 Nov 2023 19:18:12 +0800</pubDate><guid>https://chengyuan-artist.github.io/posts/movie_porco_rosso/</guid><description>&lt;img src="https://chengyuan-artist.github.io/posts/movie_porco_rosso/images/image-20231126000336734.png" alt="Featured image of post 《红猪》“因为他们的心，被大海和蓝天洗过” " />&lt;p>上周五看的电影，晚上写的影评，硬生生拖到现在才发（&lt;/p>
 &lt;p>&lt;img src="https://chengyuan-artist.github.io/posts/movie_porco_rosso/images/image-20231126003139913.png"
 width="2560"
 height="1453"
