@@ -20,7 +20,7 @@ license:
 
 有时甚至需要**完全**静态链接（包括静态链接系统库，libc等）的版本。
 
-> 用于特定TEE环境，无动态库以及完整操作系统支持
+> 用于特定TEE环境，无动态库甚至无完整操作系统支持
 
 去网上查询，没有直接SPDK静态链接的解决办法。探索了一番后，把我的做法总结上来。
 
@@ -38,7 +38,7 @@ license:
 >
 > 进入SPDK根目录：
 >
-> ```bash
+> ```shell
 > export CC=riscv64-linux-gnu-gcc
 > export CXX=riscv64-linux-gnu-g++
 > ./configure --target-arch=rv64gc --cross-prefix=riscv64-linux-gnu --with-dpdk=/path/to/dpdk/bin
