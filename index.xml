@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>麦茶小站</title><link>https://chengyuan-artist.github.io/</link><description>Recent content on 麦茶小站</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>麦茶</copyright><lastBuildDate>Mon, 09 Dec 2024 16:48:38 +0800</lastBuildDate><atom:link href="https://chengyuan-artist.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>SPDK应用静态链接</title><link>https://chengyuan-artist.github.io/posts/spdk_static_link/</link><pubDate>Mon, 09 Dec 2024 16:48:38 +0800</pubDate><guid>https://chengyuan-artist.github.io/posts/spdk_static_link/</guid><description>&lt;p>在编译SPDK应用程序时，有时需要使用静态链接SPDK库的版本。&lt;/p>
 &lt;p>有时甚至需要&lt;strong>完全&lt;/strong>静态链接（包括静态链接系统库，libc等）的版本。&lt;/p>
 &lt;blockquote>
-&lt;p>用于特定TEE环境，无动态库以及完整操作系统支持&lt;/p>
+&lt;p>用于特定TEE环境，无动态库甚至无完整操作系统支持&lt;/p>
 &lt;/blockquote>
 &lt;p>去网上查询，没有直接SPDK静态链接的解决办法。探索了一番后，把我的做法总结上来。&lt;/p>
 &lt;p>&lt;strong>注意&lt;/strong>：本文的解决方案在于&lt;strong>完全静态链接&lt;/strong>SPDK程序（包括&lt;strong>libc&lt;/strong>）, 如果你寻找的是仅静态链接SPDK库的方法，请参考&lt;a class="link" href="https://spdk.io/doc/pkgconfig.html" target="_blank" rel="noopener"
@@ -21,7 +21,7 @@
 &lt;/span>&lt;span class="lnt">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">CC&lt;/span>&lt;span class="o">=&lt;/span>riscv64-linux-gnu-gcc
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">CC&lt;/span>&lt;span class="o">=&lt;/span>riscv64-linux-gnu-gcc
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">CXX&lt;/span>&lt;span class="o">=&lt;/span>riscv64-linux-gnu-g++
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">./configure --target-arch&lt;span class="o">=&lt;/span>rv64gc --cross-prefix&lt;span class="o">=&lt;/span>riscv64-linux-gnu --with-dpdk&lt;span class="o">=&lt;/span>/path/to/dpdk/bin
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">make -j&lt;span class="o">(&lt;/span>&lt;span class="nv">$nproc&lt;/span>&lt;span class="o">)&lt;/span>
